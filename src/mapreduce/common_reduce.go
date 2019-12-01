@@ -1,5 +1,16 @@
 package mapreduce
 
+import (
+	"encoding/json"
+	"os"
+	"sort"
+)
+
+type keyValues struct {
+	key string
+	values []string
+}
+
 func doReduce(
 	jobName string, // the name of the whole MapReduce job
 	reduceTask int, // which reduce task this is
@@ -44,4 +55,45 @@ func doReduce(
 	//
 	// Your code here (Part I).
 	//
+
+	// 1. 读所有的map产生的文件 读取key 并放到大的map
+	var kvs = make(map[string][]string)
+
+	for i := 0; i < nMap; i++ {
+		mapFile, err := os.Open(reduceName(jobName, i, reduceTask))
+		if err != nil {
+			panic(err)
+		}
+
+		decoder := json.NewDecoder(mapFile)
+		for {
+			kv := new(KeyValue)
+			err := decoder.Decode(&kv)
+			if err != nil {
+				break
+			}
+			kvs[kv.Key] = append(kvs[kv.Key], kv.Value)
+		}
+		_ = mapFile.Close()
+	}
+
+	// 排序 将map转化为slice先
+	var kvsSorted []keyValues
+	for k, v := range kvs {
+		kvsSorted = append(kvsSorted, keyValues{k,v})
+	}
+
+	sort.Slice(kvsSorted, func(i, j int) bool {
+		return kvsSorted[i].key < kvsSorted[j].key
+	})
+
+	file, err := os.Create(mergeName(jobName, reduceTask))
+	if err != nil {
+		panic(err)
+	}
+	enc := json.NewEncoder(file)
+	for k, v := range kvs {
+		_ = enc.Encode(KeyValue{k, reduceF(k, v)})
+	}
+	_ = file.Close()
 }
