@@ -1,6 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+	"mapreduce"
+	"strings"
+	"unicode"
+)
 
 // learn go
 type KeyValue struct {
@@ -19,10 +25,20 @@ func main() {
 	//	}
 	//	fmt.Println(kv.Key, kv.Value)
 	//}
-	var m = make(map[string][]string)
-	m["abs"] = append(m["abs"], "dwqd")
-	m["abs"] = append(m["abs"], "dwqd")
-	m["abs"] = append(m["abs"], "dwqd")
-	m["abs"] = append(m["abs"], "dw")
-	fmt.Println(m)
+	bytes, _ := ioutil.ReadFile("src/main/pg-grimm.txt")
+	mapF("dwqd", string(bytes))
+}
+
+func mapF(filename string, contents string) []mapreduce.KeyValue {
+	f := func(c rune) bool {
+		return !unicode.IsLetter(c) && !unicode.IsNumber(c)
+	}
+	words := strings.FieldsFunc(contents, f)
+
+	var kvs []mapreduce.KeyValue
+	for _, word := range words {
+		kvs = append(kvs, mapreduce.KeyValue{word, "1"})
+	}
+	fmt.Println(kvs)
+	return kvs
 }

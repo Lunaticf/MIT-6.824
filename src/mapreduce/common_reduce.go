@@ -77,7 +77,7 @@ func doReduce(
 		_ = mapFile.Close()
 	}
 
-	// 排序 将map转化为slice先
+	// 2. 排序 将map转化为slice先
 	var kvsSorted []keyValues
 	for k, v := range kvs {
 		kvsSorted = append(kvsSorted, keyValues{k,v})
