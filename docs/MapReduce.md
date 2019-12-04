@@ -65,17 +65,15 @@ master.go 两个方法
 - Distributed()
 - Sequential()
 
-The application provides a number of input files, a map function, a reduce function, and the number of reduce tasks (nReduce).
+写完Sequential的版本后，我们就能熟悉MapReduce基本的流程了，
+下面就是要把它变成分布式的版本。
+> One of Map/Reduce's biggest selling points is that it can automatically parallelize ordinary sequential code without any extra work by the developer. 
 
-A master is created with this knowledge. It starts an RPC server (see master_rpc.go), and waits for workers to register 
-There will be nMap x nReduce files after all map tasks are done. 
-
-In this lab you'll run all the workers on the same machine, and use the local file system.
-
-The master calls mr.merge() [master_splitmerge.go], which merges all the nReduce files produced by the previous step into a single output.
+lab在本机用RPC模拟分布式的计算，
 
 
-mapF函数会输入一个文件的内容，然后输出键值对的数组
+
+
 
 
 
