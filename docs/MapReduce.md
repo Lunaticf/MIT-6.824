@@ -69,7 +69,13 @@ master.go 两个方法
 下面就是要把它变成分布式的版本。
 > One of Map/Reduce's biggest selling points is that it can automatically parallelize ordinary sequential code without any extra work by the developer. 
 
-lab在本机用RPC模拟分布式的计算，
+lab在本机用RPC模拟分布式的计算.
+
+Handling worker failures比较容易
+如果worker crash，将会因为超时返回false。
+我们只需要重新将该任务分配给其他的worker就可以了。
+可以不停地执行call，从register里面取worker，
+要注意registerChan是unbuffered channel，会堵塞的。
 
 
 

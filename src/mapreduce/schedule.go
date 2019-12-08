@@ -52,41 +52,46 @@ func schedule(jobName string, mapFiles []string, nReduce int, phase jobPhase, re
 	// 因为task远比worker多 所以我们需要先让每个worker工作，再看哪个完成了派发新的任务
 	var wg sync.WaitGroup
 
-	taskNumber := 0
-
-	for {
-		// 获取worker url
-		rpcUrl := <- registerChan
-
-		// Increment the WaitGroup counter.
-		wg.Add(1)
+	for i := 0; i < ntasks; i++ {
 
 		taskArg := DoTaskArgs{}
 		taskArg.JobName = jobName
 		taskArg.Phase = phase
-		taskArg.TaskNumber = taskNumber
+		taskArg.TaskNumber = i
 		taskArg.NumOtherPhase = n_other
 
 		if phase == mapPhase {
-			taskArg.File = mapFiles[taskNumber]
+			taskArg.File = mapFiles[i]
 		}
+
+		wg.Add(1)
 
 		go func() {
-			call(rpcUrl, "Worker.DoTask", taskArg, nil)
-			// 这里wg.Done不能写在最后 因为Channel是阻塞的 写没人读就会阻塞
-			// 就不会执行wg.Done
-			wg.Done()
+			defer wg.Done()
+			// 堵塞 获取worker
+			worker := <- registerChan
 
-			// 完成之后 直接再传给registerChan
-			registerChan <- rpcUrl
+			for {
+				status := call(worker, "Worker.DoTask", taskArg, nil)
+				if status {
+					// 如果执行成功
+					break
+				} else {
+					// 尝试获取另一个能用的在线worker
+					worker = <- registerChan
+				}
+			}
+
+			// 必须单独开一个协程来还  因为可能会出现两个worker同时写registerChan的情况，
+			// 此时就死锁了
+			go func() {
+				// 放回该worker
+				registerChan <- worker
+			}()
 		}()
-		taskNumber++
-		if taskNumber == ntasks {
-			break
-		}
 	}
 
-	// 等待所有任务完成
+	// 等待所有on the fly任务完成
 	wg.Wait()
 	fmt.Printf("Schedule: %v done\n", phase)
 }
