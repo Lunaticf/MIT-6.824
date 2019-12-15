@@ -12,8 +12,8 @@ What ever it takes.
 - [ ] Lab 4: Sharded Key/Value Service
 
 #### Lecture notes
-- [LEC1](docs/Lec1.md)
+- [LEC1](Lec-notes/Lec1.md)
+- [LEC2](Lec-notes/Lec2.md)
 
 #### Lab notes
-- [Lab1](docs/MapReduce.md)
-
+- [Lab1](Lab-notes/MapReduce.md)

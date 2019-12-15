@@ -38,7 +38,7 @@ ConcurrentMutex crawler:
 每次用一个线程去fetch，多个线程共享fetch map（data race）
 
 示例，包含了三个版本的Crawler，代码写的非常好
-[Crawler.go](./Crawler.go)
+[Crawler.go](../Lec-code/Crawler.go)
 
 那我们什么时候用锁，什么时候用Channel呢？
 Most problems can be solved in either style
@@ -75,7 +75,7 @@ RPC tries to mimic local fn call:
 客户端调用一个stub，stub调用底层的RPC库来发送请求，
 请求通过网络传递到服务端，服务端RPC库解析后，通过分发器找到对应的Handlers调用计算并处理。
 
-[kv.go](./kv.go)
+[kv.go](../Lec-code/kv.go)
 可以看到Go写一个RPC服务器非常简单。
 
 
