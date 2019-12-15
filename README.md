@@ -10,3 +10,10 @@ What ever it takes.
 - [ ] Lab 2: Raft
 - [ ] Lab 3: Fault-tolerant Key/Value Service
 - [ ] Lab 4: Sharded Key/Value Service
+
+#### Lecture notes
+- [LEC1](docs/Lec1.md)
+
+#### Lab notes
+- [Lab1](docs/MapReduce.md)
+
