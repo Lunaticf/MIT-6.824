@@ -14,6 +14,7 @@ What ever it takes.
 #### Lecture notes
 - [LEC1](Lec-notes/Lec1.md)
 - [LEC2](Lec-notes/Lec2.md)
+- [LEC21](Lec-notes/lec24.md)
 
 #### Lab notes
 - [Lab1](Lab-notes/MapReduce.md)
