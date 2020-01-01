@@ -25,22 +25,7 @@ import "labrpc"
 
 
 
-//
-// as each Raft peer becomes aware that successive log entries are
-// committed, the peer should send an ApplyMsg to the service (or
-// tester) on the same server, via the applyCh passed to Make(). set
-// CommandValid to true to indicate that the ApplyMsg contains a newly
-// committed log entry.
-//
-// in Lab 3 you'll want to send other kinds of messages (e.g.,
-// snapshots) on the applyCh; at that point you can add fields to
-// ApplyMsg, but set CommandValid to false for these other uses.
-//
-type ApplyMsg struct {
-	CommandValid bool
-	Command      interface{}
-	CommandIndex int
-}
+
 
 //
 // A Go object implementing a single Raft peer.
@@ -54,8 +39,13 @@ type Raft struct {
 	// Your data here (2A, 2B, 2C).
 	// Look at the paper's Figure 2 for a description of what
 	// state a Raft server must maintain.
+    currentTerm int				  // 当前term
+    votedFor    int				  // 为谁投票了 可能是-1代表还没
+
 
 }
+
+
 
 // return currentTerm and whether this server
 // believes it is the leader.
