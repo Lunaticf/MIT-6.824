@@ -1,5 +1,4 @@
 ## MIT 6.824
-What ever it takes.
 
 - [x] Lab 1: MapReduce
     - [x] Part I: Map/Reduce input and output
